@@ -1,0 +1,65 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Hind Siliguri', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif;
+  
+  /* China Hut Logo-Matching Brand Color Palette */
+  --color-burgundy-900: #420212;
+  --color-burgundy-800: #65051F; /* Deep Burgundy */
+  --color-burgundy-700: #850D22; /* Royal Maroon */
+  --color-burgundy-600: #9E132D;
+  --color-burgundy-100: #FDE8ED;
+  --color-burgundy-50: #FFF1F4;
+
+  --color-gold-600: #BF912B;
+  --color-gold-500: #D6A638; /* Luxury Gold */
+  --color-gold-400: #E9CD78; /* Champagne Gold */
+  --color-gold-300: #F2DE9D;
+  --color-gold-100: #FAF3DE;
+  --color-gold-50: #FFFDF7;
+
+  --color-ivory-50: #FFF8ED; /* Warm Ivory */
+  --color-cream-100: #EADBC5;
+  --color-cream-50: #F3E9D7; /* Soft Cream */
+
+  --color-dark-text: #20040B; /* Deep Wine Charcoal */
+  --color-muted-text: #6B4F55;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: #20040B;
+  background-color: #FFF8ED;
+  font-family: 'Hind Siliguri', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Subtle, organic card elevation and floating */
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-gentle-float {
+  animation: gentle-float 4.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-gentle-float {
+    animation: none !important;
+  }
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
