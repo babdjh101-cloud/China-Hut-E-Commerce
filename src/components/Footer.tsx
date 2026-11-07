@@ -6,10 +6,19 @@ import { PolicyModal } from './PolicyModal';
 
 interface FooterProps {
   onAdminClick?: () => void;
+  onPolicyClick?: (type: 'privacy' | 'terms' | 'delivery') => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
-  const [activePolicy, setActivePolicy] = useState<'privacy' | 'terms' | 'delivery' | null>(null);
+export const Footer: React.FC<FooterProps> = ({ onAdminClick, onPolicyClick }) => {
+  const [internalPolicy, setInternalPolicy] = useState<'privacy' | 'terms' | 'delivery' | null>(null);
+
+  const handlePolicySelect = (type: 'privacy' | 'terms' | 'delivery') => {
+    if (onPolicyClick) {
+      onPolicyClick(type);
+    } else {
+      setInternalPolicy(type);
+    }
+  };
 
   return (
     <>
@@ -38,7 +47,7 @@ export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
               <ul className="space-y-1.5 text-xs text-[#FFF8ED]/85">
                 <li>
                   <button
-                    onClick={() => setActivePolicy('privacy')}
+                    onClick={() => handlePolicySelect('privacy')}
                     className="hover:text-[#D6A638] transition-colors text-left cursor-pointer"
                   >
                     গোপনীয়তা নীতিমালা
@@ -46,7 +55,7 @@ export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
                 </li>
                 <li>
                   <button
-                    onClick={() => setActivePolicy('terms')}
+                    onClick={() => handlePolicySelect('terms')}
                     className="hover:text-[#D6A638] transition-colors text-left cursor-pointer"
                   >
                     ব্যবহারের শর্তাবলী
@@ -54,7 +63,7 @@ export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
                 </li>
                 <li>
                   <button
-                    onClick={() => setActivePolicy('delivery')}
+                    onClick={() => handlePolicySelect('delivery')}
                     className="hover:text-[#D6A638] transition-colors text-left cursor-pointer"
                   >
                     ডেলিভারি নীতিমালা
@@ -124,12 +133,14 @@ export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
         </div>
       </footer>
 
-      {/* Policy Dialog Modal */}
-      <PolicyModal
-        isOpen={Boolean(activePolicy)}
-        type={activePolicy}
-        onClose={() => setActivePolicy(null)}
-      />
+      {/* Policy Dialog Modal (Internal fallback if not managed centrally) */}
+      {!onPolicyClick && (
+        <PolicyModal
+          isOpen={Boolean(internalPolicy)}
+          type={internalPolicy}
+          onClose={() => setInternalPolicy(null)}
+        />
+      )}
     </>
   );
 };

@@ -11,6 +11,27 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onOrderClick }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  React.useEffect(() => {
+    const handlePopState = () => {
+      if (mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [mobileMenuOpen]);
+
+  const toggleMobileMenu = () => {
+    if (!mobileMenuOpen) {
+      if (typeof window !== 'undefined') {
+        window.history.pushState({ modal: 'mobile_menu' }, '');
+      }
+      setMobileMenuOpen(true);
+    } else {
+      setMobileMenuOpen(false);
+    }
+  };
+
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
     const element = document.getElementById(id);
@@ -114,7 +135,7 @@ export const Header: React.FC<HeaderProps> = ({ onOrderClick }) => {
 
             {/* Mobile Hamburger Toggle */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={toggleMobileMenu}
               className="md:hidden p-2 rounded-lg text-[#65051F] hover:bg-[#F3E9D7] transition-colors"
               aria-label="Toggle navigation menu"
             >

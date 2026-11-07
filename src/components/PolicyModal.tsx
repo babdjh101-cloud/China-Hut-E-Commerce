@@ -59,7 +59,7 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, type, onClose 
           </p>
           <h4 className="font-bold text-[#65051F] text-xs">১. চার্জ ও অফার</h4>
           <p>
-            ১টি বোতলে ডেলিভারি চার্জ ১০০ টাকা। তবে ২টি বা ৩টি বোতল অর্ডার করলে ডেলিভারি চার্জ সম্পূর্ণ ফ্রি (৳০)!
+            ১টি বোতল (৳৮৩০) অথবা ২টি বোতল (৳১,৫৮০) যেকোনো অফারেই সারা দেশে ডেলিভারি সম্পূর্ণ ফ্রি (৳০)!
           </p>
           <h4 className="font-bold text-[#65051F] text-xs">২. সময়</h4>
           <p>

@@ -212,13 +212,20 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ isOpen, onClose }) => 
     }
 
     try {
+      const cleanEmail = loginEmail.trim().toLowerCase();
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: loginEmail.trim(),
+        email: cleanEmail,
         password: loginPassword,
       });
 
       if (error) {
-        setAuthError(error.message || 'ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।');
+        let msg = error.message;
+        if (error.message.includes('Invalid login credentials')) {
+          msg = 'ইমেইল অথবা পাসওয়ার্ড সঠিক নয়। Supabase Dashboard -> Authentication -> Users-এ আপনার ইউজারের পাসওয়ার্ডটি নিশ্চিত করুন।';
+        } else if (error.message.includes('Email not confirmed')) {
+          msg = 'ইমেইল এখনো কনফার্ম করা হয়নি! Supabase Dashboard -> Authentication -> Users -> razibulh02@gmail.com এর ডানে গিয়ে "Auto Confirm User" বা "Confirm email" এ ক্লিক করুন।';
+        }
+        setAuthError(msg);
         setIsLoggingIn(false);
         return;
       }
@@ -608,8 +615,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ isOpen, onClose }) => 
                         type="email"
                         required
                         value={loginEmail}
-                        onChange={(e) => setLoginEmail(e.target.value)}
-                        placeholder="babdjh101@gmail.com"
+                        onChange={(e) => {
+                          setLoginEmail(e.target.value);
+                          if (authError) setAuthError('');
+                        }}
+                        placeholder="razibulh02@gmail.com"
                         className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-[#E9CD78] text-xs sm:text-sm focus:border-[#65051F] focus:outline-none bg-[#FFF8ED]/50"
                       />
                     </div>
@@ -625,7 +635,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ isOpen, onClose }) => 
                         type="password"
                         required
                         value={loginPassword}
-                        onChange={(e) => setLoginPassword(e.target.value)}
+                        onChange={(e) => {
+                          setLoginPassword(e.target.value);
+                          if (authError) setAuthError('');
+                        }}
                         placeholder="••••••••"
                         className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-[#E9CD78] text-xs sm:text-sm focus:border-[#65051F] focus:outline-none bg-[#FFF8ED]/50"
                       />

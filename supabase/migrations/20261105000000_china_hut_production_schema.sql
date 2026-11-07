@@ -379,13 +379,16 @@ BEGIN
   END IF;
 
   -- 9. Server-Authoritative Financial Calculations (Zero trust on client-submitted prices)
-  v_subtotal := v_product.price * p_quantity;
-
-  -- Business Pricing Tier: 2 or more bottles get 100% FREE delivery (0.00 BDT)
-  IF p_quantity >= 2 THEN
+  -- Approved Pricing: 1 bottle = ৳830 (Free Delivery), 2 bottles = ৳1,580 (Free Delivery)
+  IF p_quantity = 2 THEN
+    v_subtotal := 1580.00;
+    v_delivery_charge := 0.00;
+  ELSIF p_quantity = 1 THEN
+    v_subtotal := 830.00;
     v_delivery_charge := 0.00;
   ELSE
-    v_delivery_charge := v_product.delivery_charge;
+    v_subtotal := v_product.price * p_quantity;
+    v_delivery_charge := 0.00;
   END IF;
 
   v_total_amount := v_subtotal + v_delivery_charge;
@@ -518,9 +521,9 @@ INSERT INTO public.products (
   'southmoon-lipoma-removal-spray',
   'SouthMoon',
   '50ml / 1.69 fl oz',
-  750.00,
-  1250.00,
-  100.00,
+  830.00,
+  1050.00,
+  0.00,
   250,
   true,
   'SM-LRS-50ML',
