@@ -6,6 +6,7 @@ import {
   generateWhatsAppOrderUrl,
 } from '../lib/currency';
 import { INITIAL_PRODUCT } from '../config/constants';
+import { trackWhatsAppClick } from '../lib/gtm';
 
 interface StickyMobileOrderBarProps {
   quantity: number;
@@ -54,6 +55,7 @@ export const StickyMobileOrderBar: React.FC<StickyMobileOrderBarProps> = ({
           href={whatsappData.url}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackWhatsAppClick('sticky_mobile_bar', quantity, pricing.total)}
           className="w-10 h-10 rounded-xl bg-[#25D366] text-white flex items-center justify-center shrink-0 shadow-xs active:scale-95"
           aria-label="Order on WhatsApp"
           title="WhatsApp-এ অর্ডার করুন"

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { formatBDT, calculateOrderTotals, generateWhatsAppOrderUrl } from '../lib/currency';
 import { INITIAL_PRODUCT } from '../config/constants';
+import { trackAddToCart, trackPackageSelect, trackWhatsAppClick } from '../lib/gtm';
 
 interface HeroSectionProps {
   quantity: number;
@@ -292,7 +293,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   {/* OFFER 1: 1 Bottle */}
                   <button
                     type="button"
-                    onClick={() => onQuantityChange(1)}
+                    onClick={() => {
+                      onQuantityChange(1);
+                      trackPackageSelect('Offer 1: 1 Bottle', 1, 830);
+                      trackAddToCart({ id: INITIAL_PRODUCT.id, name: INITIAL_PRODUCT.name, price: 830 }, 1, 830);
+                    }}
                     className={`p-3 rounded-2xl border text-center transition-all relative cursor-pointer ${
                       quantity === 1
                         ? 'bg-[#65051F] text-[#FFF8ED] border-2 border-[#D6A638] font-bold shadow-md'
@@ -312,7 +317,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   {/* OFFER 2: 2 Bottles */}
                   <button
                     type="button"
-                    onClick={() => onQuantityChange(2)}
+                    onClick={() => {
+                      onQuantityChange(2);
+                      trackPackageSelect('Offer 2: 2 Bottles', 2, 1580);
+                      trackAddToCart({ id: INITIAL_PRODUCT.id, name: INITIAL_PRODUCT.name, price: 830 }, 2, 1580);
+                    }}
                     className={`p-3 rounded-2xl border text-center transition-all relative cursor-pointer ${
                       quantity === 2
                         ? 'bg-[#65051F] text-[#FFF8ED] border-2 border-[#D6A638] font-bold shadow-md'
@@ -379,6 +388,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   href={whatsappData.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackWhatsAppClick('hero_section', quantity, pricing.total)}
                   className="w-full py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-white bg-[#25D366] hover:bg-[#20bd5a] shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
                 >
                   <MessageCircle className="w-4 h-4 fill-white text-[#25D366]" />

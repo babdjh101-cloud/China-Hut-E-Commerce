@@ -69,7 +69,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ isOpen, onClose }) => 
   // Authentication
   const [sessionUser, setSessionUser] = useState<{ email: string; id: string } | null>(null);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
-  const [loginEmail, setLoginEmail] = useState('');
+  const [loginEmail, setLoginEmail] = useState('razibulh02@gmail.com');
   const [loginPassword, setLoginPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);

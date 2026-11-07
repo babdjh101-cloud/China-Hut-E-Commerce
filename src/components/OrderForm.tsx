@@ -23,6 +23,7 @@ import {
 import { orderCheckoutSchema } from '../lib/validation';
 import { Order } from '../types';
 import { submitOrder } from '../services/orderService';
+import { trackPurchase, trackPackageSelect, trackWhatsAppClick } from '../lib/gtm';
 
 interface OrderFormProps {
   productPrice: number;
@@ -130,6 +131,11 @@ export const OrderForm: React.FC<OrderFormProps> = ({
       });
 
       setIsSubmitting(false);
+      trackPurchase(order, {
+        id: 'southmoon-lipoma-spray-50ml',
+        name: 'SouthMoon Lipoma Removal Spray (50ml)',
+        price: productPrice,
+      });
       onOrderSuccess(order);
     } catch (error) {
       console.error('Failed to submit order:', error);
@@ -205,7 +211,10 @@ export const OrderForm: React.FC<OrderFormProps> = ({
                 {/* OFFER 1: 1 Bottle */}
                 <button
                   type="button"
-                  onClick={() => handleQuantitySelect(1)}
+                  onClick={() => {
+                    handleQuantitySelect(1);
+                    trackPackageSelect('Offer 1: 1 Bottle', 1, 830);
+                  }}
                   className={`p-3 rounded-2xl border text-center transition-all relative cursor-pointer ${
                     quantity === 1
                       ? 'bg-[#65051F] text-[#FFF8ED] border-2 border-[#D6A638] font-bold shadow-md'
@@ -225,7 +234,10 @@ export const OrderForm: React.FC<OrderFormProps> = ({
                 {/* OFFER 2: 2 Bottles */}
                 <button
                   type="button"
-                  onClick={() => handleQuantitySelect(2)}
+                  onClick={() => {
+                    handleQuantitySelect(2);
+                    trackPackageSelect('Offer 2: 2 Bottles', 2, 1580);
+                  }}
                   className={`p-3 rounded-2xl border text-center transition-all relative cursor-pointer ${
                     quantity === 2
                       ? 'bg-[#65051F] text-[#FFF8ED] border-2 border-[#D6A638] font-bold shadow-md'
@@ -388,6 +400,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
                 href={whatsappData.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick('order_form', quantity, pricing.total)}
                 className="w-full py-2.5 px-4 rounded-xl font-bold text-xs text-white bg-[#25D366] hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
               >
                 <MessageCircle className="w-4 h-4 fill-white text-[#25D366]" />

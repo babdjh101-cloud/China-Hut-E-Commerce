@@ -2,6 +2,7 @@ import React from 'react';
 import { MessageCircle } from 'lucide-react';
 import { generateWhatsAppOrderUrl, calculateOrderTotals, formatBDT } from '../lib/currency';
 import { INITIAL_PRODUCT } from '../config/constants';
+import { trackWhatsAppClick } from '../lib/gtm';
 
 interface FloatingWhatsAppButtonProps {
   quantity: number;
@@ -24,6 +25,7 @@ export const FloatingWhatsAppButton: React.FC<FloatingWhatsAppButtonProps> = ({ 
         href={whatsappData.url}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackWhatsAppClick('floating_button', quantity, pricing.total)}
         className="flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white p-2.5 sm:px-4 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 border-2 border-white/80"
         title="WhatsApp-এ অর্ডার করুন"
       >

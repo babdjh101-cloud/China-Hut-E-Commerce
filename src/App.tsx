@@ -16,6 +16,7 @@ import { AdminPortal } from './components/admin/AdminPortal';
 import { INITIAL_PRODUCT } from './config/constants';
 import { Order } from './types';
 import { fetchActivePrimaryProduct } from './services/productService';
+import { initGTM, trackPageView, trackViewItem, trackBeginCheckout } from './lib/gtm';
 
 export default function App() {
   const [quantity, setQuantity] = useState(1);
@@ -34,6 +35,8 @@ export default function App() {
 
   const [isAdminOpen, setIsAdminOpen] = useState(checkIsAdminPath);
   const [activeProduct, setActiveProduct] = useState({
+    id: INITIAL_PRODUCT.id,
+    name: INITIAL_PRODUCT.name,
     price: INITIAL_PRODUCT.price,
     deliveryCharge: INITIAL_PRODUCT.baseDeliveryCharge,
   });
@@ -43,19 +46,30 @@ export default function App() {
       const prod = await fetchActivePrimaryProduct();
       if (prod) {
         setActiveProduct({
+          id: prod.id,
+          name: prod.name,
           price: prod.price,
           deliveryCharge: prod.deliveryCharge,
         });
+        trackViewItem({ id: prod.id, name: prod.name, price: prod.price });
+      } else {
+        trackViewItem({ id: INITIAL_PRODUCT.id, name: INITIAL_PRODUCT.name, price: INITIAL_PRODUCT.price });
       }
     } catch (e) {
       console.warn('Could not load active product:', e);
+      trackViewItem({ id: INITIAL_PRODUCT.id, name: INITIAL_PRODUCT.name, price: INITIAL_PRODUCT.price });
     }
   };
 
   useEffect(() => {
+    // Initialize GTM and record initial Page View
+    initGTM('GTM-53BB4H6D');
+    trackPageView(window.location.pathname, document.title);
     loadProduct();
+
     const handlePopState = () => {
       setIsAdminOpen(checkIsAdminPath());
+      trackPageView(window.location.pathname, document.title);
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -78,11 +92,19 @@ export default function App() {
   };
 
   const scrollToOrderForm = (targetQty?: number | unknown) => {
+    const checkoutQty = typeof targetQty === 'number' && Number.isFinite(targetQty) && targetQty > 0 ? targetQty : quantity;
     if (typeof targetQty === 'number' && Number.isFinite(targetQty) && targetQty > 0) {
       setQuantity(targetQty);
     } else {
       setQuantity((prev) => (typeof prev === 'number' && prev > 0 ? prev : 1));
     }
+
+    // Fire GTM begin_checkout event
+    trackBeginCheckout(
+      { id: activeProduct.id, name: activeProduct.name, price: activeProduct.price },
+      checkoutQty,
+      checkoutQty === 2 ? 1580 : 830
+    );
 
     const card = document.getElementById('order-checkout-card') || document.getElementById('order-form');
     if (card) {

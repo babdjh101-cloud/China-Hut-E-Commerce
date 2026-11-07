@@ -12,6 +12,7 @@ import {
 import { Order } from '../types';
 import { formatBDT, toBengaliNumber } from '../lib/currency';
 import { BRAND_CONFIG } from '../config/constants';
+import { trackWhatsAppClick } from '../lib/gtm';
 
 interface OrderConfirmationModalProps {
   order: Order | null;
@@ -114,6 +115,7 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackWhatsAppClick('confirmation_modal', order.quantity, order.totalAmount)}
             className="w-full py-2.5 px-4 rounded-xl font-bold text-xs text-white bg-[#25D366] hover:bg-[#20bd5a] transition-colors flex items-center justify-center gap-2 shadow-xs"
           >
             <MessageCircle className="w-4 h-4" />

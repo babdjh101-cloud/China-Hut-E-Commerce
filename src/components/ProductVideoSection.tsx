@@ -3,6 +3,7 @@ import { Play, Video, ShieldCheck, Sparkles } from 'lucide-react';
 import { BRAND_CONFIG, INITIAL_PRODUCT } from '../config/constants';
 import { VideoItem } from '../types';
 import { fetchPublishedVideo } from '../services/videoService';
+import { trackVideoInteraction } from '../lib/gtm';
 
 interface ProductVideoSectionProps {
   onOrderClick: () => void;
@@ -103,7 +104,10 @@ export const ProductVideoSection: React.FC<ProductVideoSectionProps> = ({ onOrde
               <div className="relative z-10 text-center px-4 space-y-3 max-w-sm mx-auto">
                 <button
                   type="button"
-                  onClick={() => setIsPlaying(true)}
+                  onClick={() => {
+                    setIsPlaying(true);
+                    trackVideoInteraction('play', currentTitle);
+                  }}
                   className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-r from-[#D6A638] via-[#E9CD78] to-[#D6A638] text-[#65051F] flex items-center justify-center mx-auto shadow-xl hover:scale-110 active:scale-95 transition-all cursor-pointer border border-[#FFF8ED]"
                   aria-label="Play video"
                 >
@@ -139,7 +143,7 @@ export const ProductVideoSection: React.FC<ProductVideoSectionProps> = ({ onOrde
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-[#D6A638] shrink-0" />
             <span className="font-bold text-[#65051F]">
-              ২টি বা ৩টি বোতল নিলেই ফ্রি ডেলিভারি অফার!
+              ১টি বা ২টি বোতলের যেকোনো অর্ডারে ডেলিভারি চার্জ সম্পূর্ণ ফ্রি!
             </span>
           </div>
 
